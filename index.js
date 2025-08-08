@@ -240,10 +240,21 @@ async function run() {
 
     })
 
-    app.get('/carts',async(req,res)=>{
+    app.get('/carts',verifyToken,async(req,res)=>{
       const email =req?.query?.email;
      const result =await cartsCollection.find({email:email}).toArray()
      res.send(result)
+    })
+
+
+    app.delete("/cart/:id",async(req,res)=>{
+     
+      const id ={_id:new ObjectId(req?.params?.id)}
+
+      const result=await cartsCollection.deleteOne(id)
+
+      res.send(result);
+
     })
    
    
