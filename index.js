@@ -247,11 +247,18 @@ async function run() {
     })
 
 
-    app.delete("/cart/:id",async(req,res)=>{
+    app.post("/cart",async(req,res)=>{
+      const ids = req.body;
+       
+        if (!ids || !Array.isArray(ids)) {
+      return res.status(400).send({ error: "Invalid ID array" });
+    } 
+    
+     const objectIds = ids.map(id => new ObjectId(id));
      
-      const id ={_id:new ObjectId(req?.params?.id)}
+      
 
-      const result=await cartsCollection.deleteOne(id)
+      const result=await cartsCollection.deleteMany({ _id: { $in: objectIds } });
 
       res.send(result);
 
